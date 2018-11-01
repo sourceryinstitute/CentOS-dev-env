@@ -37,11 +37,17 @@ if [ "X$(pwd)" != "X${PKG_SRC}" ]; then
     cd "${PKG_SRC}" || exit 1
 fi
 
-# Fetch the Kitware public GPG key. See the CMake downloads page
-gpg --keyserver hkps://hkps.pool.sks-keyservers.net --recv-keys CBA23971357C2E6590D9EFD3EC8FEF3A7BFB4EDA
+TEMP_FILE="$(mktemp /tmp/pubkey.XXXXXXXXXX)" || exit 1
+gpg --import < 0xCBA23971357C2E6590D9EFD3EC8FEF3A7BFB4EDA.gpg.pub.asc
+TRUST_VALUE=':4:'
+TRUSTVAR=$(gpg --fingerprint CBA23971357C2E6590D9EFD3EC8FEF3A7BFB4EDA | grep Key | cut -d= -f2 | sed 's/ //g')
+echo "$TRUSTVAR$TRUST_VALUE" > "$TEMP_FILE"
+gpg --import-ownertrust "$TEMP_FILE"
+rm "$TEMP_FILE" || true
+
 if gpg --list-keys --fingerprint CBA23971357C2E6590D9EFD3EC8FEF3A7BFB4EDA | \
 	grep "CBA2 3971 357C 2E65 90D9  EFD3 EC8F EF3A 7BFB 4EDA" ; then
-    gpg --quick-lsign-key CBA23971357C2E6590D9EFD3EC8FEF3A7BFB4EDA
+    echo "Fingerprint matches." # Duh, we're explicitly storing the public key...
 else
     echo "Bad GPG fingerprint for Kitware public key. Fingerprint may be outdated." >&2
     echo "Aborting out of an abundance of caution!" >&2
@@ -61,7 +67,7 @@ else
     exit 1
 fi
 curl -L -O "https://cmake.org/files/v${CMAKE_VER%.*}/cmake-${CMAKE_VER}-Linux-x86_64.sh"
-if grep "cmake-${CMAKE_VER}-Linux-x86_64.sh" | shasum -c - ; then
+if grep "cmake-${CMAKE_VER}-Linux-x86_64.sh" "cmake-${CMAKE_VER}-SHA-256.txt" | sha256sum -c - ; then
     echo "SHA256 cyrpotographic checksum matches for cmake-${CMAKE_VER}-Linux-x86_64.sh!"
     echo "We have verified the authenticity of the CMake installer binaries."
     rm "cmake-${CMAKE_VER}-SHA-256.txt" || true
@@ -71,6 +77,8 @@ else
 fi
 
 # Do the installation
+mkdir -p "${CMAKE_PREFIX}" || true
+chmod +x "./cmake-${CMAKE_VER}-Linux-x86_64.sh"
 if "./cmake-${CMAKE_VER}-Linux-x86_64.sh" --prefix="${CMAKE_PREFIX}" --skip-license --exclude-subdir ; then
     rm "./cmake-${CMAKE_VER}-Linux-x86_64.sh" || true
 else
