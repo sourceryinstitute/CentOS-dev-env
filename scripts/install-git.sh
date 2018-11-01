@@ -15,8 +15,6 @@ set -o errtrace
 export PACKAGES_DIR
 : "${PKG_SRC:=/tmp/pkg_source}"
 export PKG_SRC
-: "${GCC_PREFIX:=/${PACKAGES_DIR}/gcc/${GCC_VER}}"
-export PREFIX=GCC_PREFIX
 
 # See https://reproducible-builds.org/docs/source-date-epoch/
 DATE_FMT="%Y-%m-%d"
@@ -54,13 +52,6 @@ else
     exit 1
 fi
 mkdir -p "${GIT_PREFIX}"
-
-PATH="${GCC_PREFIX}/bin:${PATH}"
-export PATH
-CC="$(type -P gcc)"
-export CC
-CXX="$(type -P g++)"
-export CXX
 
 make -j "$(nproc)" prefix="${GIT_PREFIX}" NO_GETTEXT=1 NO_TCLTK=1 NO_EXPAT=1 NO_OPENSSL=1 all
 make -j "$(nproc)" prefix="${GIT_PREFIX}" NO_GETTEXT=1 NO_TCLTK=1 NO_EXPAT=1 NO_OPENSSL=1 install

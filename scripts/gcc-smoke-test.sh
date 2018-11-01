@@ -12,8 +12,6 @@ export PKG_SRC
 : "${GCC_PREFIX:=/${PACKAGES_DIR}/gcc/${GCC_VER}}"
 export PREFIX=GCC_PREFIX
 
-export PATH="${GCC_PREFIX}/bin:${PATH}"
-
 gcc --version
 gfortran --version
 g++ --version

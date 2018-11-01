@@ -13,7 +13,7 @@ ENV GCC_VER 8.2.0
 ENV PACKAGES_DIR /opt
 ENV GCC_PREFIX ${PACKAGES_DIR}/gcc/${GCC_VER}
 ENV PKG_SRC /tmp/pkg_source
-ENV SOURCE_DATE_EPOCH=${GCC_SDE:-}
+ENV SOURCE_DATE_EPOCH ${GCC_SDE:-}
 
 WORKDIR ${PKG_SRC}
 COPY ./scripts/install-rpms.sh \
@@ -37,6 +37,10 @@ ENV GCC_VER 8.2.0
 ENV PACKAGES_DIR /opt
 ENV GCC_PREFIX ${PACKAGES_DIR}/gcc/${GCC_VER}
 ENV PKG_SRC /tmp/pkg_source
+ENV PATH ${GCC_PREFIX}/bin:${PATH}
+ENV CC ${GCC_PREFIX}/bin/gcc
+ENV FC ${GCC_PREFIX}/bin/gfortran
+ENV CXX ${GCC_PREFIX}/bin/g++
 
 WORKDIR ${PKG_SRC}
 COPY ./scripts/install-rpms.sh \
@@ -55,7 +59,8 @@ WORKDIR ${PKG_SRC}
 COPY ./scripts/git-${GIT_VER}.tar.gz.sha256 \
 	./scripts/install-git.sh ./
 ARG GIT_SDE=
-RUN ./install-git.sh && rm ./install-git.sh git-${GIT_VER}.tar.gz.sha256
+RUN ./install-git.sh && rm ./install-git.sh
+ENV PATH ${GIT_PREFIX}/bin:${PATH}
 
 ENV CMAKE_VER 3.12.3
 ENV CMAKE_PREFIX ${PACKAGES_DIR}/cmake/${CMAKE_VER}
@@ -66,3 +71,4 @@ COPY ./scripts/cmake-${CMAKE_VER}-SHA-256.txt \
 	./scripts/install-cmake.sh ./
 ARG CMAKE_SDE=
 RUN ./install-cmake.sh && rm ./install-cmake.sh
+ENV PATH ${CMAKE_PREFIX}/bin:${PATH}
