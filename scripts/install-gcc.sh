@@ -78,6 +78,9 @@ cd "${PKG_SRC}" || exit 1
 rm -rf "${PKG_SRC}/gcc-build" || true
 rm -rf "${PKG_SRC}/gcc-${GCC_VER}" || true
 
+find /opt/gcc/"${GCC_VER}"/{lib,lib64,bin,include} -type f -exec sha256sum {} \; \
+     > "/opt/gcc/${GCC_VER}/share/gcc-${GCC_VER}/install_manifest_sha256.txt"
+
 cat >> /etc/ld.so.conf.d/local.conf <<-EOF
 ${GCC_PREFIX}/lib64
 ${GCC_PREFIX}/lib
