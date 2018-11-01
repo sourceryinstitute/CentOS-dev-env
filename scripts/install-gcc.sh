@@ -78,8 +78,12 @@ cd "${PKG_SRC}" || exit 1
 rm -rf "${PKG_SRC}/gcc-build" || true
 rm -rf "${PKG_SRC}/gcc-${GCC_VER}" || true
 
-find /opt/gcc/"${GCC_VER}"/{lib,lib64,bin,include} -type f -exec sha256sum {} \; \
+find "${GCC_PREFIX}"/{lib,lib64,bin,include} -type f -exec sha256sum {} \; \
      > "/opt/gcc/${GCC_VER}/share/gcc-${GCC_VER}/install_manifest_sha256.txt"
+echo "${SOURCE_DATE_EPOCH}" > "${GCC_PREFIX}/share/gcc-${GCC_VER}/SOURCE_DATE_EPOCH.txt"
+echo "${USER}" > "${GCC_PREFIX}/share/gcc-${GCC_VER}/BUILD_USER.txt"
+echo "${PKG_SRC}/gcc-build" > "${GCC_PREFIX}/share/gcc-${GCC_VER}/BUILD_DIRECTORY.txt"
+echo "${PKG_SRC}/gcc-${GCC_VER}" > "${GCC_PREFIX}/share/gcc-${GCC_VER}/EXTRACTED_SOURCE_DIRECTORY.txt"
 
 cat >> /etc/ld.so.conf.d/local.conf <<-EOF
 ${GCC_PREFIX}/lib64
