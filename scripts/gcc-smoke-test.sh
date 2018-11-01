@@ -38,3 +38,13 @@ if ! ./smoke_test | grep "Hello world" ; then
    echo "Smoke test of GFortran ${GCC_VER} failed!" >&2
    exit 1
 fi
+
+update-alternatives --install /usr/bin/gcc gcc "${GCC_PREFIX}/bin/gcc" 20
+
+update-alternatives --install /usr/bin/g++ g++ "${GCC_PREFIX}/bin/g++" 20
+
+update-alternatives --install /usr/bin/cc cc /usr/bin/gcc 30
+update-alternatives --set cc /usr/bin/gcc
+
+update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++ 30
+update-alternatives --set c++ /usr/bin/g++

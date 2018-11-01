@@ -1,3 +1,4 @@
+curl-devel
 environment-modules
 file
 glibc-devel
@@ -7,10 +8,14 @@ m4
 make
 nano
 openssh
+openssh-askpass
+openssh-clients
 PackageKit-command-not-found
 perl
+perl-devel
 sudo
 vim
 wget
 which
 zlib
+zlib-devel
