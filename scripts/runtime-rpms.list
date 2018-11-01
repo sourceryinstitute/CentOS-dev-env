@@ -1,0 +1,16 @@
+environment-modules
+file
+glibc-devel
+libgcc
+libstdc++-devel
+m4
+make
+nano
+openssh
+PackageKit-command-not-found
+perl
+sudo
+vim
+wget
+which
+zlib

@@ -1,0 +1,13 @@
+*.log
+*.err
+log.*
+.git
+.gitignore
+.gitmodules
+hooks
+*~
+Makefile
+#*#
+\#*\#
+README.md
+scripts/README.md
