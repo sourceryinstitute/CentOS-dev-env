@@ -11,11 +11,6 @@ set -o pipefail
 set -o errexit
 set -o errtrace
 
-: "${PACKAGES_DIR:=/opt}"
-export PACKAGES_DIR
-: "${PKG_SRC:=/tmp/pkg_source}"
-export PKG_SRC
-
 # See https://reproducible-builds.org/docs/source-date-epoch/
 DATE_FMT="%Y-%m-%d"
 SOURCE_DATE_EPOCH="${SOURCE_DATE_EPOCH:-${GIT_SDE:-}}"
@@ -32,7 +27,7 @@ export PACKAGES_DIR
 : "${PKG_SRC:=/tmp/pkg_source}"
 export PKG_SRC
 : "${GIT_PREFIX:=/${PACKAGES_DIR}/git/${GIT_VER}}"
-export PREFIX=GIT_PREFIX
+export GIT_PREFIX
 umask 0022
 
 if ! [ -d "${PKG_SRC}" ]; then
@@ -60,5 +55,5 @@ cd "${PKG_SRC}" || exit 1
 rm -rf "${PKG_SRC}/git-${GIT_VER}" || true
 
 cat >> /etc/skel/.bashrc <<-EOF
-	export PATH="${GIT_PREFIX}/bin:${PATH}"
+export PATH="${GIT_PREFIX}/bin:\${PATH}"
 EOF

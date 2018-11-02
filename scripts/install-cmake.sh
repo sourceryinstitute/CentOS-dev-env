@@ -87,5 +87,5 @@ else
 fi
 
 cat >> /etc/skel/.bashrc <<-EOF
-	export PATH="${CMAKE_PREFIX}/bin:${PATH}"
+export PATH="${CMAKE_PREFIX}/bin:\${PATH}"
 EOF
