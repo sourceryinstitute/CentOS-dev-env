@@ -72,3 +72,21 @@ COPY ./scripts/0xCBA23971357C2E6590D9EFD3EC8FEF3A7BFB4EDA.gpg.pub.asc \
 ARG CMAKE_SDE=
 RUN ./install-cmake.sh && rm ./install-cmake.sh
 ENV PATH ${CMAKE_PREFIX}/bin:${PATH}
+
+# Build-time metadata as defined at http://label-schema.org
+    ARG BUILD_DATE
+    ARG VCS_REF
+    ARG VCS_URL
+    ARG VCS_VERSION=latest
+    LABEL org.label-schema.schema-version="1.0" \
+          org.label-schema.build-date="$BUILD_DATE" \
+          org.label-schema.version="$VCS_VERSION" \
+          org.label-schema.name="centos-dev-env" \
+          org.lavel-schema.source-date-epoch="$SOURCE_DATE_EPOCH" \
+          org.label-schema.description="CentOS 7 base image for gcc, git, and CMake" \
+          org.label-schema.url="https://github.com/sourceryinstitute/CentOS-dev-env/" \
+          org.label-schema.vcs-ref="$VCS_REF" \
+          org.label-schema.vcs-url="$VCS_URL" \
+          org.label-schema.vendor="Sourcery Institute" \
+          org.label-schema.license="MIT" \
+          org.label-schema.docker.cmd="docker run -v $(pwd):/workdir -i -t sourceryinstitute/centos-dev-env:latest"
